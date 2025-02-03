@@ -106,6 +106,10 @@ public class AdministratorController {
 			redirectAttributes.addFlashAttribute("errorMessage", "メールアドレスまたはパスワードが不正です。");
 			return "redirect:/";
 		}
+
+        //Ex01：sessionスコープを使う→HTML側(list,detail)では、キーの前にsession.をつける
+		session.setAttribute("administratorName", administrator.getName());
+
 		return "redirect:/employee/showList";
 	}
 
