@@ -60,6 +60,7 @@
                       <label
                         th:errors="*{name}"
                         class="error-messages"
+                        style="color:red">エラー！
                       >
                         氏名を入力してください
                       </label>
@@ -81,12 +82,34 @@
                   <div class="row">
                     <div class="col-sm-12">
                       <label for="mailAddress"> メールアドレス: </label>
+
+
+
+                      <!--Ex03-->
+                      <!-- th:if:条件分岐。""内がtrueの場合、その要素を表示する
+                     　 ${duplicateEmailError}：リクエストスコープに格納されたキー名。これでエラーメッセージを表示する
+                      　${duplicateEmailError}に値が入っていれば、true、nullまたは空であればfalseとして判断される -->
+
+                      <!-- th:text:指定された式の結果をその要素の内容として表示する
+                      　${duplicateEmailError} の値が要素内で表示される -->
+
+
+                      <!-- th:if内の"${duplicateEmailError}"はただの条件。
+                      　　　th:textがなければ何も表示されない -->
+                      <label th:if="${duplicateEmailError}" 
+                             th:text="${duplicateEmailError}" 
+                             class="error-messages" 
+                             style="color:red">
+                      </label>
+
                       <label
                         th:errors="*{mailAddress}"
                         class="error-messages"
+                        style="color:red">エラー！
                       >
                         メールアドレスを入力してください
                       </label>
+                     
                       <input
                         type="text"
                         name="mailAddress"
@@ -108,9 +131,11 @@
                       <label
                         th:errors="*{password}"
                         class="error-messages"
+                        style="color:red">エラー！
                       >
                         パスワードを入力してください
                       </label>
+                     
                       <input
                         type="password"
                         name="password"
