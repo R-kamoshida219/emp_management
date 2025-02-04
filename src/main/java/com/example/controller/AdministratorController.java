@@ -3,6 +3,9 @@ package com.example.controller;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +28,7 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/")
 public class AdministratorController {
+
 
 	@Autowired
 	private AdministratorService administratorService;
@@ -72,7 +76,28 @@ public class AdministratorController {
 	 * @return ログイン画面へリダイレクト
 	 */
 	@PostMapping("/insert")
-	public String insert(InsertAdministratorForm form) {
+	public String insert(
+		@Validated InsertAdministratorForm form,
+		BindingResult result,
+		RedirectAttributes redirectAttributes,
+		Model model
+		) {
+			if(result.hasErrors()){
+				return toInsert();
+		}
+
+		//Ex03　重複をチェックし、エラーメッセージを設定する
+
+		//１：ユーザーが入力したメールアドレス（引数）を取得する
+		    //(administratorService というオブジェクト がisEmailDuplicated() というメソッドを、メールアドレス を引数として渡しながら呼び出している)
+		//２：model(リクエストスコープ)にduplicateEmailError" というキーに "このメールアドレスはすでに登録されています" という値をセット。
+		   //ThymeleafのViewのメソッド（Insert())にデータを渡す
+
+		if(administratorService.isEmailDuplicated(form.getMailAddress())){
+			model.addAttribute("duplicateEmailError","このメールアドレスはすでに登録されています" );
+			return toInsert();
+		}
+
 		Administrator administrator = new Administrator();
 		// フォームからドメインにプロパティ値をコピー
 		BeanUtils.copyProperties(form, administrator);
